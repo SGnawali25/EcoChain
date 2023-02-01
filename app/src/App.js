@@ -1,12 +1,16 @@
 import React from 'react';
-import LandingPage from './Body/LandingPage';
 import Navbar from './Header/Navbar';
+import Body from './Body/Body';
+import axios from 'axios';
 
 const App = () => {
+  axios.defaults.baseURL = process.env.REACT_APP_API_URL;
+  axios.defaults.headers.post['Content-Type'] = 'application/json';
+
   return (
     <div className="App bg-green-50">
       <Navbar />
-      <LandingPage />
+      <Body />
     </div>
   );
 };
