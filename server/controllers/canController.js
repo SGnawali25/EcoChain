@@ -37,10 +37,12 @@ const deleteCan = asyncHandler(async (req, res, next) => {
 
 const updateCan = asyncHandler(async (req, res, next) => {
   let can = await GarbageCan.findById(req.params.id);
+  console.log(req.body);
   if (can) {
     can.coordinates = req.body.coordinates || can.coordinates;
     can.totalCapacity = req.body.totalCapacity || can.totalCapacity;
-    can.capacityFilled = req.body.capacityFilled || can.capacityFilled;
+    can.capacityFilled =
+      req.body.capacityFilled.toString() || can.capacityFilled;
     await can.save();
     res.json(can);
   } else {
@@ -51,18 +53,17 @@ const updateCan = asyncHandler(async (req, res, next) => {
 const validatePassword = asyncHandler(async (req, res, next) => {
   const { password } = req.body;
   const { id } = req.params;
-  console.log(req.user);
   if (password === process.env.CAN_PASSWORD) {
-    const token = await jwt.sign(
+    const token = jwt.sign(
       { userId: req.user._id, canId: id },
       process.env.JWT_SECRET || 'somesecretkey',
       {
-        expiresIn: '120s',
+        expiresIn: '180s',
       }
     );
     res.status(200).json({
       status: 'success',
-      message: `Hi ${req.user.username}! You have authenticated successfully! Opening the can for 120 seconds.`,
+      message: `Hi ${req.user.username}! You have authenticated successfully! Opening the can for 180 seconds.`,
       token,
     });
   } else {
@@ -70,19 +71,53 @@ const validatePassword = asyncHandler(async (req, res, next) => {
   }
 });
 
+const genRand = (min, max, decimalPlaces) => {
+  const rand = Math.random() * (max - min) + min;
+  const power = Math.pow(10, decimalPlaces);
+  return Math.floor(rand * power) / power;
+};
+
 const calculateWaste = asyncHandler(async (req, res, next) => {
   const { id } = req.params;
+  const { recycleToken } = req.body;
   const can = await GarbageCan.findById(id);
   if (can) {
     const { capacityFilled, totalCapacity } = can;
-    const waste = (capacityFilled / totalCapacity) * 100;
+    const waste = genRand(0, totalCapacity - capacityFilled, 2);
+    const decoded_data = jwt.verify(recycleToken, process.env.JWT_SECRET);
+    if (
+      decoded_data.canId !== id ||
+      decoded_data.userId !== req.user._id.toString()
+    ) {
+      throw new AppError('Invalid token!', 401);
+    }
+    const token = jwt.sign(
+      {
+        waste,
+        canId: id,
+        userId: req.user._id.toString(),
+      },
+      process.env.JWT_SECRET,
+      {
+        expiresIn: '1h',
+      }
+    );
     res.status(200).json({
       status: 'success',
-      waste,
+      data: waste,
+      token,
     });
   } else {
     throw new AppError('Garbage can not found', 404);
   }
 });
 
-export { getCans, getCan, createCan, deleteCan, updateCan, validatePassword };
+export {
+  getCans,
+  getCan,
+  createCan,
+  deleteCan,
+  updateCan,
+  validatePassword,
+  calculateWaste,
+};

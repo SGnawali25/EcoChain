@@ -83,7 +83,7 @@ const RecyclePage = () => {
               >
                 <Popup>
                   Capacity: {can.capacityFilled}/{can.totalCapacity} <br />
-                  {can.capacityFilled < can.totalCapacity ? (
+                  {can.capacityFilled < can.totalCapacity - 0.01 ? (
                     <Link to={`/recycle/${can._id}`} className="text-center">
                       <div className="text-center">Recycle</div>
                     </Link>

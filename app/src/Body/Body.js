@@ -9,6 +9,7 @@ import Logout from './Logout';
 import Protected from './Protected';
 import RecyclePage from './Recycle/index';
 import Recycle from './Recycle/Recycle';
+import SuccessPage from './SuccessPage';
 
 const Body = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -50,6 +51,7 @@ const Body = () => {
               </Protected>
             }
           />
+          <Route path="/success/:amount" element={<SuccessPage />} />
           <Route path="/logout" element={<Logout />} />
           <Route path="*" element={<NotFound />} />
         </Routes>

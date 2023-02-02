@@ -17,6 +17,10 @@ const transactionSchema = new Schema(
       type: Number,
       required: true,
     },
+    coinsAwarded: {
+      type: Number,
+      required: true,
+    },
   },
   {
     timestamps: true,
