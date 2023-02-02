@@ -5,6 +5,7 @@ module.exports = {
     extend: {
       backgroundImage: {
         landing: "url('../public/landingPage.svg')",
+        backgroundImage: "url('../public/bgImage.svg')",
       },
       fontFamily: {
         poppins: ['"Poppins"', 'sans-serif'],

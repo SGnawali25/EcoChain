@@ -1,0 +1,8 @@
+.leaflet-div-icon {
+  background: transparent !important;
+  border: none !important;
+}
+
+.leaflet-container {
+  border-radius: 1rem;
+}

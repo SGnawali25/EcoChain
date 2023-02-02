@@ -24,6 +24,16 @@ const garbageCanSchema = new Schema(
   }
 );
 
+garbageCanSchema.pre('validate', function (next) {
+  if (this.capacityFilled > this.totalCapacity) {
+    next(
+      new Error('Capacity filled cannot be greater than the total capacity')
+    );
+  } else {
+    next();
+  }
+});
+
 const GarbageCan = mongoose.model('garbageCans', garbageCanSchema);
 
 export default GarbageCan;

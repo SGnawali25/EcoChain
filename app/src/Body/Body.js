@@ -6,36 +6,55 @@ import NotFound from './NotFound';
 import { useEffect, useState } from 'react';
 import jwt_decode from 'jwt-decode';
 import Logout from './Logout';
+import Protected from './Protected';
+import RecyclePage from './Recycle/index';
+import Recycle from './Recycle/Recycle';
 
 const Body = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [isBusy, setIsBusy] = useState(true);
 
   useEffect(() => {
-    if (
+    setIsLoggedIn(
       localStorage.token &&
-      jwt_decode(localStorage.token).exp * 1000 > Date.now()
-    ) {
-      setIsLoggedIn(true);
-    } else {
-      setIsLoggedIn(false);
-    }
+        jwt_decode(localStorage.token).exp * 1000 > Date.now()
+    );
+    setIsBusy(false);
   }, []);
   return (
-    <div className="Body">
-      <Routes>
-        <Route
-          path="/login"
-          element={isLoggedIn ? <LandingPage /> : <Login />}
-        />
-        <Route path="/" element={<LandingPage />} />
-        <Route
-          path="/signup"
-          element={isLoggedIn ? <LandingPage /> : <Signup />}
-        />
-        <Route path="/logout" element={<Logout />} />
-        <Route path="*" element={<NotFound />} />
-      </Routes>
-    </div>
+    !isBusy && (
+      <div className="Body">
+        <Routes>
+          <Route
+            path="/login"
+            element={isLoggedIn ? <LandingPage /> : <Login />}
+          />
+          <Route path="/" element={<LandingPage />} />
+          <Route
+            path="/signup"
+            element={isLoggedIn ? <LandingPage /> : <Signup />}
+          />
+          <Route
+            path="/recycle"
+            element={
+              <Protected isLoggedIn={isLoggedIn} isBusy={isBusy}>
+                <RecyclePage />
+              </Protected>
+            }
+          />
+          <Route
+            path="/recycle/:id"
+            element={
+              <Protected isLoggedIn={isLoggedIn} isBusy={isBusy}>
+                <Recycle />
+              </Protected>
+            }
+          />
+          <Route path="/logout" element={<Logout />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
+    )
   );
 };
 
