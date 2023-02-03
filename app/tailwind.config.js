@@ -6,6 +6,7 @@ module.exports = {
       backgroundImage: {
         landing: "url('../public/landingPage.svg')",
         backgroundImage: "url('../public/bgImage.svg')",
+        cardTexture: "url('../public/card_pattern.svg')",
       },
       fontFamily: {
         poppins: ['"Poppins"', 'sans-serif'],

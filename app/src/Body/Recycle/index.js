@@ -36,6 +36,11 @@ const RecyclePage = () => {
     return null;
   };
 
+  const toFixed = (num, fixed) => {
+    const re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+  };
+
   const canIcon = new L.Icon({
     iconUrl: require('../../assets/canMarker.png'),
     iconRetinaUrl: require('../../assets/canMarker.png'),
@@ -82,8 +87,9 @@ const RecyclePage = () => {
                 key={id}
               >
                 <Popup>
-                  Capacity: {can.capacityFilled}/{can.totalCapacity} <br />
-                  {can.capacityFilled < can.totalCapacity - 0.01 ? (
+                  Capacity: {toFixed(can.capacityFilled, 1)}/{can.totalCapacity}{' '}
+                  <br />
+                  {can.capacityFilled < can.totalCapacity - 0.1 ? (
                     <Link to={`/recycle/${can._id}`} className="text-center">
                       <div className="text-center">Recycle</div>
                     </Link>
@@ -93,14 +99,6 @@ const RecyclePage = () => {
                 </Popup>
               </Marker>
             ))}
-          {/* <Marker position={initialPosition} icon={canIcon}>
-            <Popup>
-              Capacity: 2/10 <br />
-              <Link to="/" className="text-center">
-                <div className="text-center">Recycle</div>
-              </Link>
-            </Popup>
-          </Marker> */}
         </MapContainer>
       </div>
     </div>

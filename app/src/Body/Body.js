@@ -10,6 +10,7 @@ import Protected from './Protected';
 import RecyclePage from './Recycle/index';
 import Recycle from './Recycle/Recycle';
 import SuccessPage from './SuccessPage';
+import Profile from './Profile';
 
 const Body = () => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -48,6 +49,14 @@ const Body = () => {
             element={
               <Protected isLoggedIn={isLoggedIn} isBusy={isBusy}>
                 <Recycle />
+              </Protected>
+            }
+          />
+          <Route
+            path="/profile"
+            element={
+              <Protected isLoggedIn={isLoggedIn} isBusy={isBusy}>
+                <Profile />
               </Protected>
             }
           />

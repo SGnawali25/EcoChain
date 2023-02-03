@@ -5,11 +5,14 @@ import Countdown from 'react-countdown';
 import { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { PulseLoader } from 'react-spinners';
 
 const CalculateWaste = ({ error, success, setError, setSuccess }) => {
   const [validated, setValidated] = useState(false);
   const [validationToken, setValidationToken] = useState('');
   const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+  const [loadingTransaction, setLoadingTransaction] = useState(false);
 
   const getDate = () => {
     try {
@@ -24,8 +27,14 @@ const CalculateWaste = ({ error, success, setError, setSuccess }) => {
     }
   };
 
+  const toFixed = (num, fixed) => {
+    const re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
+    return num.toString().match(re)[0];
+  };
+
   const handleCalculation = async () => {
     try {
+      setLoading(true);
       const data = await axios.post(
         `/cans/calculate/${jwt_decode(localStorage.recycleToken).canId}`,
         {
@@ -33,13 +42,17 @@ const CalculateWaste = ({ error, success, setError, setSuccess }) => {
         }
       );
       setSuccess(
-        `Calculated ${data.data.data} lbs of waste! You will be rewarded ${
-          data.data.data * 0.1
-        } EcoCoins. Do you want to recycle and continue with the transaction?`
+        `Calculated ${
+          data.data.data
+        } lbs of waste! You will be rewarded ${toFixed(
+          data.data.data * 0.1,
+          3
+        )} EcoCoins. Do you want to recycle and continue with the transaction?`
       );
       setValidationToken(data.data.token);
       localStorage.setItem('validationToken', data.data.token);
       setValidated(true);
+      setLoading(false);
     } catch (err) {
       setError('Session expired. Please log in again.');
     }
@@ -47,6 +60,7 @@ const CalculateWaste = ({ error, success, setError, setSuccess }) => {
 
   const handleValidation = async () => {
     try {
+      setLoadingTransaction(true);
       const data = await axios.post(
         `/users/recycle/${jwt_decode(localStorage.recycleToken).canId}`,
         {
@@ -58,6 +72,7 @@ const CalculateWaste = ({ error, success, setError, setSuccess }) => {
       console.log(data.data);
       setValidated(false);
       const waste = jwt_decode(localStorage.validationToken).waste;
+      setLoadingTransaction(false);
       localStorage.removeItem('recycleToken');
       localStorage.removeItem('validationToken');
       navigate(`/success/${waste}`);
@@ -118,7 +133,7 @@ const CalculateWaste = ({ error, success, setError, setSuccess }) => {
             className="w-[80%] bg-green-500 text-white rounded-lg p-2 my-3 mt-6"
             onClick={handleCalculation}
           >
-            Calculate
+            {loading ? <PulseLoader color="#fff" size={6} /> : 'Calculate'}
           </button>
         )}
         {validated && (
@@ -127,7 +142,20 @@ const CalculateWaste = ({ error, success, setError, setSuccess }) => {
             className="w-[80%] bg-green-500 text-white rounded-lg p-2 my-3 mt-6"
             onClick={handleValidation}
           >
-            Complete Transaction
+            {loadingTransaction ? (
+              <PulseLoader color="#fff" size={6} />
+            ) : (
+              'Complete Transaction'
+            )}
+          </button>
+        )}
+        {validated && !loadingTransaction && (
+          <button
+            type="submit"
+            className="w-[80%] bg-blue-500 text-white rounded-lg p-2"
+            onClick={handleCalculation}
+          >
+            {loading ? <PulseLoader color="#fff" size={6} /> : 'Recalculate'}
           </button>
         )}
       </div>
