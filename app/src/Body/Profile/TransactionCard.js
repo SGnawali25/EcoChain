@@ -12,12 +12,10 @@ const TransactionCard = ({ transaction }) => {
     axios.get(`/cans/${transaction.garbageCan}`).then((res) => {
       const reqUrl = `https://nominatim.openstreetmap.org/reverse?lat=${
         res.data.coordinates.split(',')[0]
-      }&lon=${res.data.coordinates.split(',')[1].trim()}&format=json`;
+      }&lon=${res.data.coordinates.split(',')[1].trim()}&zoom=10&format=json`;
       console.log(reqUrl);
       axios.get(reqUrl).then((res) => {
-        res.data.address.city
-          ? setCity(res.data.address.city)
-          : setCity(res.data.address.town);
+        setCity(res.data.address.city);
       });
     });
   }, []);
