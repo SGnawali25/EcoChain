@@ -91,6 +91,7 @@ const calculateWaste = asyncHandler(async (req, res, next) => {
     ) {
       throw new AppError('Invalid token!', 401);
     }
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const token = jwt.sign(
       {
         waste,

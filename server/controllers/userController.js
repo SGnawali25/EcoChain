@@ -2,13 +2,45 @@ import asyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import { AppError } from '../utils/errorUtils.js';
 
+const toFixed = (num, fixed) => {
+  const re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
+  return num.toString().match(re)[0];
+};
+
 const getUserData = asyncHandler(async (req, res, next) => {
-  const user = await User.findById(req.user._id).populate('transactions');
+  const user = await User.findById(req.user._id).populate({
+    path: 'transactions',
+    options: { sort: { createdAt: -1 } },
+  });
+  const transactionPerPage = 5;
+  const transactionCount = Math.ceil(
+    user.transactions.length / transactionPerPage
+  );
+  let page = parseInt(req.query.p);
+  if (!page) {
+    page = 1;
+  }
+  if (page > transactionCount) {
+    page = transactionCount;
+  }
   if (user) {
+    const totalWasteRecycled = toFixed(
+      user.transactions.reduce((acc, item) => acc + item.wasteRecycled, 0),
+      3
+    );
+    const totalCoinsEarned = toFixed(
+      user.transactions.reduce((acc, item) => acc + item.coinsAwarded, 0),
+      3
+    );
     res.status(200).json({
       _id: user._id,
       username: user.username,
-      transactions: user.transactions,
+      transactions: user.transactions.slice(
+        page * transactionPerPage - transactionPerPage,
+        page * transactionPerPage
+      ),
+      totalWasteRecycled,
+      totalCoinsEarned,
       balance: user.ecoCoins,
     });
   } else {

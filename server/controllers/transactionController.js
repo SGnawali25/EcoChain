@@ -32,6 +32,11 @@ const addTransaction = asyncHandler(async (req, res, next) => {
   }
 });
 
+const toFixed = (num, fixed) => {
+  const re = new RegExp('^-?\\d+(?:.\\d{0,' + (fixed || -1) + '})?');
+  return num.toString().match(re)[0];
+};
+
 const addTransactionSecure = asyncHandler(async (req, res, next) => {
   const user = req.user;
   const validationToken = req.body.validationToken;
@@ -48,13 +53,16 @@ const addTransactionSecure = asyncHandler(async (req, res, next) => {
       user: user._id,
       garbageCan: can._id,
       wasteRecycled: decoded.waste,
-      coinsAwarded: decoded.waste * 0.1,
+      coinsAwarded: toFixed(decoded.waste * 0.1, 3),
     };
+    await new Promise((resolve) => setTimeout(resolve, 5000));
     const transaction = await Transaction.create(newTransaction);
     user.transactions.push(transaction._id);
     user.ecoCoins += transaction.coinsAwarded;
+    user.ecoCoins = toFixed(user.ecoCoins, 3);
     await user.save();
     can.capacityFilled += transaction.wasteRecycled;
+    can.capacityFilled = toFixed(can.capacityFilled, 3);
     await can.save();
     res.status(201).json({
       status: 'success',
