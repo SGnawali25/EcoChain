@@ -83,7 +83,7 @@ const calculateWaste = asyncHandler(async (req, res, next) => {
   const can = await GarbageCan.findById(id);
   if (can) {
     const { capacityFilled, totalCapacity } = can;
-    const waste = genRand(0, totalCapacity - capacityFilled, 2);
+    const waste = Math.min(genRand(0, 10, 2, totalCapacity - capacityFilled));
     const decoded_data = jwt.verify(recycleToken, process.env.JWT_SECRET);
     if (
       decoded_data.canId !== id ||

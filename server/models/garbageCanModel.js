@@ -11,7 +11,7 @@ const garbageCanSchema = new Schema(
     totalCapacity: {
       type: Number,
       required: true,
-      default: 10,
+      default: 100,
     },
     capacityFilled: {
       type: Number,
