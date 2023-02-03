@@ -58,9 +58,11 @@ const Profile = () => {
             </div>
           </div>
           <div className="py-5">
-            <h1 className="text-center text-2xl font-bold text-text">
-              Recent Transactions
-            </h1>
+            {user.transactions.length > 0 && (
+              <h1 className="text-center text-2xl font-bold text-text">
+                Recent Transactions
+              </h1>
+            )}
             {user.transactions.length > 0 ? (
               user.transactions.map((transaction) => (
                 <TransactionCard
@@ -69,9 +71,9 @@ const Profile = () => {
                 />
               ))
             ) : (
-              <div className="flex flex-col items-center justify-center mt-10">
-                <h1 className="text-2xl font-bold text-center mt-5">
-                  No Transactions
+              <div className="flex flex-col items-center justify-center my-10">
+                <h1 className="text-2xl font-bold text-center text-gray-600">
+                  No Transactions Yet
                 </h1>
               </div>
             )}

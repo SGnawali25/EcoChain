@@ -15,7 +15,9 @@ const TransactionCard = ({ transaction }) => {
       }&lon=${res.data.coordinates.split(',')[1].trim()}&format=json`;
       console.log(reqUrl);
       axios.get(reqUrl).then((res) => {
-        setCity(res.data.address.city);
+        res.data.address.city
+          ? setCity(res.data.address.city)
+          : setCity(res.data.address.town);
       });
     });
   }, []);
