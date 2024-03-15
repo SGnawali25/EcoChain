@@ -6,6 +6,7 @@ import mongoose, { mongo } from 'mongoose';
 import userRouter from './routes/userRouter.js';
 import canRouter from './routes/canRouter.js';
 import { handleError, AppError } from './utils/errorUtils.js';
+import welcomeRouter from './routes/welcomeRouter.js';
 
 // Middleware setup
 dotenv.config();
@@ -21,6 +22,7 @@ const MONGODB_URI = process.env.MONGODB_URI;
 // Defining routes
 app.use('/api/v1/users', userRouter);
 app.use('/api/v1/cans', canRouter);
+app.use("/",welcomeRouter)
 app.use('*', () => {
   throw new AppError('Route not found', 404);
 });
