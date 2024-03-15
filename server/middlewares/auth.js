@@ -6,6 +6,7 @@ import { AppError } from '../utils/errorUtils.js';
 const isAuthenticated = asyncHandler(async (req, res, next) => {
   const { authorization } = req.headers;
   const token = authorization && authorization.split(' ')[1];
+  console.log(authorization, token);
 
   if (!token) {
     next(
@@ -32,6 +33,7 @@ const isAuthenticated = asyncHandler(async (req, res, next) => {
 });
 
 const isAdmin = asyncHandler(async (req, res, next) => {
+  console.log(req.body)
   if (req.user) {
     if (req.user.role === 'ADMIN') {
       req.user.isAdmin = true;

@@ -22,6 +22,7 @@ const getCan = asyncHandler(async (req, res, next) => {
 });
 
 const createCan = asyncHandler(async (req, res, next) => {
+  console.log(req.body)
   const can = await GarbageCan.create(req.body);
   res.status(201).json(can);
 });
@@ -37,7 +38,6 @@ const deleteCan = asyncHandler(async (req, res, next) => {
 
 const updateCan = asyncHandler(async (req, res, next) => {
   let can = await GarbageCan.findById(req.params.id);
-  console.log(req.body);
   if (can) {
     can.coordinates = req.body.coordinates || can.coordinates;
     can.totalCapacity = req.body.totalCapacity || can.totalCapacity;
