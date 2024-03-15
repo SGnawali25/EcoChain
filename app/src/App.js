@@ -8,7 +8,7 @@ const App = () => {
   axios.defaults.headers.post['Content-Type'] = 'application/json';
   axios.defaults.headers.common[
     'Authorization'
-  ] = `Bearer ${localStorage.token}`;
+  ] = `Bearer ${localStorage.token}`
 
   return (
     <div className="App bg-green-50">
