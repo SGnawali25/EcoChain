@@ -1,6 +1,5 @@
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import axios from 'axios';
 import jwt_decode from 'jwt-decode';
 import CalculateWaste from './CalculateWaste';
 import Authenticate from './Authentication';
@@ -38,7 +37,7 @@ const Recycle = () => {
         return;
       }
     }
-  });
+  },[authenticated, params.id])
 
   return (
     <div className="h-[91.5vh]">
