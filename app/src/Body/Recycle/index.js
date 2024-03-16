@@ -8,9 +8,9 @@ import axios from 'axios';
 import { FaRecycle } from 'react-icons/fa';
 
 const RecyclePage = () => {
-  // const [initialPosition, setInitialPosition] = useState([
-  //   36.167428, -86.804212,
-  // ]);
+  const [initialPosition, setInitialPosition] = useState([
+    36.167428, -86.804212,
+  ]);
   const [cans, setCans] = useState([]);
 
   useEffect(() => {
