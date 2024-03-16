@@ -18,7 +18,7 @@ const TransactionCard = ({ transaction }) => {
         setCity(res.data.address.city);
       });
     });
-  }, []);
+  });
 
   return !city ? (
     <div className="flex align-center text-center justify-center py-6 ">

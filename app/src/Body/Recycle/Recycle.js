@@ -7,16 +7,16 @@ import Authenticate from './Authentication';
 
 const Recycle = () => {
   const params = useParams();
-  const [can, setCan] = useState(null);
+  // const [can, setCan] = useState(null);
   const [authenticated, setAuthenticated] = useState(false);
   const [error, setError] = useState('');
   const [success, setSuccess] = useState('');
 
-  useEffect(() => {
-    axios.get(`/cans/${params.id}`).then((res) => {
-      setCan(res.data);
-    });
-  }, []);
+  // useEffect(() => {
+  //   axios.get(`/cans/${params.id}`).then((res) => {
+  //     setCan(res.data);
+  //   });
+  // }, []);
 
   useEffect(() => {
     if (!authenticated && localStorage.recycleToken) {
@@ -38,7 +38,7 @@ const Recycle = () => {
         return;
       }
     }
-  }, []);
+  });
 
   return (
     <div className="h-[91.5vh]">
